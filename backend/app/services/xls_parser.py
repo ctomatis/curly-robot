@@ -135,82 +135,14 @@ class XLSParser:
         return result
 
 
-def convert_to_adjacency_list(data):
-    """
-    Convierte la estructura JSON jerárquica a lista de adyacencia
-    """
-    records = []
-    current_id = 1
 
-    for section_name, section_content in data.items():
-        # Crear el nodo de sección (nivel 0)
-        section_id = current_id
-        records.append(
-            {
-                "id": section_id,
-                "name": section_name,
-                "parent_id": None,
-                "price": None,
-                "level": 0,
-            }
-        )
-        current_id += 1
 
-        # Verificar si tiene subcategorías o items directos
-        first_value = next(iter(section_content.values()))
-
-        if isinstance(first_value, dict):
-            # Tiene subcategorías (como Carnicería)
-            for category_name, items in section_content.items():
-                # Crear el nodo de categoría (nivel 1)
-                category_id = current_id
-                records.append(
-                    {
-                        "id": category_id,
-                        "name": category_name,
-                        "parent_id": section_id,
-                        "price": None,
-                        "level": 1,
-                    }
-                )
-                current_id += 1
-
-                # Crear los items/productos (nivel 2)
-                for item_name, price in items.items():
-                    records.append(
-                        {
-                            "id": current_id,
-                            "name": item_name,
-                            "parent_id": category_id,
-                            "price": price,
-                            "level": 2,
-                        }
-                    )
-                    current_id += 1
-        else:
-            # No tiene subcategorías, items directos (como Pescadería)
-            for item_name, price in section_content.items():
-                records.append(
-                    {
-                        "id": current_id,
-                        "name": item_name,
-                        "parent_id": section_id,
-                        "price": price,
-                        "level": 1,
-                    }
-                )
-                current_id += 1
-
-    return records
 
 
 if __name__ == "__main__":
     import os
-
+    
     dir = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(dir, "inputs/Carnes y Pescados.xlsx")
     data = XLSParser.parse(filepath)
-
-    data = convert_to_adjacency_list(data)
-
     print(json.dumps(data, indent=4, ensure_ascii=False))
