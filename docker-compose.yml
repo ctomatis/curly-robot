@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend_app
+    volumes:
+      - ./backend:/app
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - FLASK_APP=wsgi.py
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=mydb
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - mynet
+  
+  frontend:
+    build: ./frontend
+    container_name: frontend_app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    networks:
+      - mynet
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynet
+
+networks:
+  mynet:
+
+volumes:
+  mysql_data:
