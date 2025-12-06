@@ -22,7 +22,6 @@ def clean_item(line):
 
         if val:
             val += c
-
     return val
 
 
@@ -52,7 +51,6 @@ class PDFParser:
 
     @staticmethod
     def parse(file_path: str):
-        group = "Verduleria"
         reader = PdfReader(file_path)
 
         content = ""
@@ -60,9 +58,12 @@ class PDFParser:
             content += page.extract_text()
         lines = content.split("\n")
 
-        result = {group: {}}
         for i, line in enumerate(lines):
             line = line.strip()
+
+            if not i:
+                section = line[: line.find(" ")].strip()
+                result = {section: {}}
 
             if "por kg" in line:
                 categories, price = read_line(lines[i - 1])
@@ -74,9 +75,10 @@ class PDFParser:
 
                 key = " - ".join(categories)
 
-                if not key in result[group]:
-                    result[group][key] = {}
-                result[group][key][item] = price
+                if not key in result[section]:
+                    result[section][key] = {}
+                result[section][key][item] = price
+                
         return result
 
 
