@@ -4,9 +4,8 @@ from app.validator.schema import schema
 
 
 class AppValidator(Validator):
-    rules = {"valid_date": {"type": "integer"}}
-
     def _validate_valid_date(self, valid_date, field, value):
+        "{'type': 'integer'}"
 
         if not valid_date:
             return
