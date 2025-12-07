@@ -1,6 +1,6 @@
 
 import DefaultLayout from "@/layouts/default";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@heroui/button";
 import { SelectDate } from "@/components/select-date";
 import { Input } from "@heroui/input";
@@ -8,11 +8,14 @@ import { Form } from "@heroui/form";
 import { Recipe, useCreateQuoteBatchMutation, useGetProductsQuery } from "@/services/api";
 import { CardRecipes } from "@/components/recipes";
 import { Alert } from "@heroui/alert";
+import { useAppSelector } from "@/hooks/redux";
 
 export default function BatchPage() {
   const { isError } = useGetProductsQuery({ id: undefined })
   const [uploadFile, { isLoading }] = useCreateQuoteBatchMutation()
+  const { date } = useAppSelector(state => state.rate)
   const [recipes, setRecipes] = useState<Recipe[]>([])
+  const formRef = useRef<HTMLFormElement>(null)
 
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,10 +25,7 @@ export default function BatchPage() {
 
     const fileInput = form.elements.namedItem("file") as HTMLInputElement
     const file = fileInput.files?.[0] as File
-    if (!file) return;
-
-    const dateInput = form.elements.namedItem("date") as HTMLInputElement
-    const date = dateInput.value
+    if (!file || !date) return;
 
     try {
       const res = await uploadFile({ file, date }).unwrap()
@@ -35,11 +35,21 @@ export default function BatchPage() {
     }
   }
 
+  useEffect(() => {
+    if (date && formRef.current) {
+      const file = formRef.current
+        ?.querySelector("input[name='file']") as HTMLInputElement | null
+
+      if (!file?.files?.length) return
+      formRef.current.requestSubmit()
+    }
+  }, [date])
+
   return (
     <DefaultLayout>
       <section className="flex w-full py-8 gap-8 justify-center">
         <div className="flex w-1/3 flex-col gap-3">
-          <Form onSubmit={onSubmit}>
+          <Form ref={formRef} onSubmit={onSubmit}>
             {isError && <Alert variant="flat" color="danger"><span className="text-tiny">No tenés ingredientes cargados. Cargá los ingredientes.</span></Alert>}
             <SelectDate />
             <Input
