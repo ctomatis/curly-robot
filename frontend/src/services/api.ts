@@ -42,6 +42,7 @@ export interface Recipe {
     usd: number
     weight: number
     count: number
+    products: Product[]
 }
 
 export interface QuoteResponse {

@@ -43,22 +43,40 @@ class OrderBatch(MethodView):
             total = 0.0
             total_weight = 0.0
             n = 0
+
+            it = {
+                "date": date,
+                "recipe": recipe,
+                "count": 0,
+                "weight": 0.0,
+                "ars": 0.0,
+                "usd": 0.0,
+                "products": [],
+            }
+
             for p in products:
                 n += 1
-                total_weight += items[p.slug]["weight"]
-                total += p.price_for_weight(
-                    items[p.slug]["weight"], current_app.config["MIN_FRACTION"]
+                w = items[p.slug]["weight"]
+
+                price = p.price_for_weight(w, current_app.config["MIN_FRACTION"])
+
+                total_weight += w
+                total += price
+
+                it["products"].append(
+                    {
+                        "name": p.name,
+                        "unit_price": {"ars": p.price, "usd": p.price / rate},
+                        "price": {"ars": price, "usd": price / rate},
+                        "weight": w,
+                    }
                 )
 
-            results.append(
-                {
-                    "date": date,
-                    "recipe": recipe,
-                    "count": n,
-                    "weight": total_weight,
-                    "ars": total,
-                    "usd": total / rate,
-                }
-            )
+            it["count"] = n
+            it["weight"] = total_weight
+            it["ars"] = total
+            it["usd"] = total / rate
+
+            results.append(it)
 
         return jsonify(results)

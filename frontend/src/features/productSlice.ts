@@ -8,6 +8,7 @@ export interface Product {
     price?: number
     slug: string
     weight?: number
+    unit_price?: number
 }
 
 interface ProductState {
