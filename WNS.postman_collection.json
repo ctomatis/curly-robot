@@ -56,6 +56,25 @@
 			"response": []
 		},
 		{
+			"name": "Children Product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Currency rate",
 			"request": {
 				"method": "GET",
@@ -103,6 +122,40 @@
 					"port": "5000",
 					"path": [
 						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Quote Batch",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Cristian/Downloads/WNS-Instancia evaluativa Proceso de Selección/inputs/Recetas.md"
+						},
+						{
+							"key": "date",
+							"value": "2025-12-6",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/order_batch",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"order_batch"
 					]
 				}
 			},
