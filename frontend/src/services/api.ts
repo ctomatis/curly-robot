@@ -36,13 +36,16 @@ export interface Quote {
     items: Product[]
 }
 
+export interface Recipe {
+    recipe?: string
+    ars: number
+    usd: number
+    weight: number
+    count: number
+}
+
 export interface QuoteResponse {
-    data: {
-        ars: number
-        usd: number
-        weight: number
-        count: number
-    }
+    data: Recipe
     status: string
 }
 
@@ -84,7 +87,19 @@ export const api = createApi({
                 method: 'POST',
                 body: body
             })
-        })
+        }),
+        createQuoteBatch: builder.mutation<Recipe[], FileParams & { date: string }>({
+            query: ({ file, date }) => {
+                const formData = new FormData();
+                formData.append("file", file)
+                formData.append("date", date)
+                return {
+                    url: "order_batch",
+                    method: 'POST',
+                    body: formData
+                }
+            }
+        }),
     })
 })
 
@@ -95,5 +110,6 @@ export const {
     useLazyGetProductsQuery,
     useCreateQuoteMutation,
     useGetCurrencyRateQuery,
-    useUploadProductsMutation
+    useUploadProductsMutation,
+    useCreateQuoteBatchMutation
 } = api

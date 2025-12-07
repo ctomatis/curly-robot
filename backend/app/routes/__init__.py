@@ -3,6 +3,8 @@ from app.views.upload import Upload
 from app.views.product import Products
 from app.views.rates import Rates
 from app.views.quote import Order
+from app.views.quote_batch import OrderBatch
+
 
 
 def register_routes(app):
@@ -18,3 +20,4 @@ def register_routes(app):
 
     app.add_url_rule("/rates", view_func=Rates.as_view("rates"))
     app.add_url_rule("/order", view_func=Order.as_view("quote"))
+    app.add_url_rule("/order_batch", view_func=OrderBatch.as_view("quote_batch"))

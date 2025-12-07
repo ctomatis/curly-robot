@@ -14,7 +14,7 @@ export const SelectDate = () => {
     const [selectedDate, setSelectedDate] = useState<string>(formatDate(today(getLocalTimeZone()).toDate(getLocalTimeZone()))
     );
 
-    const { isLoading } = useGetCurrencyRateQuery({date: selectedDate});
+    const { isLoading } = useGetCurrencyRateQuery({ date: selectedDate });
 
     const onChangeDate = (date: DateValue) => {
         const formatted = formatDate(date.toDate(getLocalTimeZone()));
@@ -23,6 +23,8 @@ export const SelectDate = () => {
     };
     return (
         <DatePicker
+            isRequired
+            name="date"
             isDisabled={isLoading}
             fullWidth
             value={value}
