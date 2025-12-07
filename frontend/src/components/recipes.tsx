@@ -36,7 +36,7 @@ export const CardRecipes = ({ recipe }: { recipe: Recipe }) => {
                     {recipe.products.map(item => <div className="flex w-full justify-between mt-2">
                         <div className="flex flex-col">
                             <p className="text-sm">{item.name}</p>
-                            <p className="text-tiny">{symbol} {getPrice(item.unit_price as any)} por kg</p>
+                            <p className="text-tiny text-default-500">{symbol} {getPrice(item.unit_price as any)} por kg</p>
                         </div>
                         <div className="flex flex-col items-end">
                             <p className="text-sm">{symbol} {getPrice(item.price as any)}</p>
